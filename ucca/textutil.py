@@ -78,6 +78,10 @@ def get_nlp(lang="en"):
                 nlp[lang] = instance = spacy.load(model)
             except OSError:
                 spacy.cli.download(model)
+                # Workaround from https://github.com/explosion/spaCy/issues/3435#issuecomment-474580269
+                from spacy.cli import link
+                from spacy.util import get_package_path
+                link(model, model, force=True, model_path=get_package_path(model))
                 try:
                     nlp[lang] = instance = spacy.load(model)
                 except OSError as e:
